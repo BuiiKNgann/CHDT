@@ -94,8 +94,8 @@ const getDetailsProduct = async (req, res) => {
  const getAllProduct = async (req, res) => {
    // Kiểm tra body nhận được
      try {
-         const {limit, page} = req.query 
-         const response = await ProductService.getAllProduct(Number(limit), Number(page));   
+         const {limit, page, sort, filter} = req.query 
+         const response = await ProductService.getAllProduct(Number(limit) || 8, Number(page)|| 0, sort, filter) ;   
        return res.status(200).json(response);
      } catch (e) {
          console.log(e); // Log lỗi nếu có

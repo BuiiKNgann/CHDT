@@ -109,20 +109,51 @@ const getDetailsProduct = (id) => {
 };
 
  
-const getAllProduct = (limit = 8, page = 0) => {
-    return new Promise(async(resolve, reject) => {
-        try {  
-            const totalProduct = await Product.countDocuments()     
-  const allProduct =  await Product.find().limit(limit).skip(page*limit)
+const getAllProduct = (limit, page, sort, filter) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const totalProduct = await Product.countDocuments();
+
+            // Kiểm tra nếu có filter
+            if (filter) {
+                const label = filter[0]; // Thuộc tính cần lọc
+                const regexFilter = new RegExp(filter[1], 'i'); // 'i' để không phân biệt hoa thường
+                console.log('label', label);
+                
+                const allObjectFilter = await Product.find({
+                    [label]: regexFilter // Sử dụng đối tượng RegExp
+                }).limit(limit).skip(page * limit); // Thêm phân trang
+
                 resolve({
                     status: 'OK',
                     message: 'Success',
-                    data: allProduct,
+                    data: allObjectFilter,
                     total: totalProduct,
-                    pageCurrent: Number(page + 1),
-                    totalPage: Math.ceil(totalProduct/limit)
-                        
-                })    
+                    pageCurrent: Number(page) + 1,
+                    totalPage: Math.ceil(totalProduct / limit)
+                });
+                return;
+            }
+
+            // Kiểm tra nếu có sort
+            let objectSort = {};
+            if (sort) {
+                objectSort[sort[1]] = sort[0] === 'desc' ? -1 : 1; // 'desc' = -1, 'asc' = 1
+            } 
+            
+            const allProductSort = await Product.find()
+                .limit(limit)
+                .skip(page * limit)
+                .sort(objectSort); // Sử dụng objectSort tại đây
+
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                data: allProductSort,
+                total: totalProduct,
+                pageCurrent: Number(page) + 1,
+                totalPage: Math.ceil(totalProduct / limit)
+            });
         } catch (e) {
             reject(e);
         }
