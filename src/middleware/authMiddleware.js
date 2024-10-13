@@ -13,7 +13,7 @@ const authMiddleWare= (req, res,next) =>{
         })
       }
       const { payload } = user
-    if(payload?.isAdmin) {
+    if(user?.isAdmin) {
        next()
     }else {
         return res.status(404).json({
@@ -25,6 +25,8 @@ const authMiddleWare= (req, res,next) =>{
 }
 
 const authUserMiddleWare= (req, res,next) =>{
+  console.log('req.headers: ',req.headers);
+  
     //  console.log('checkToken', req.headers.token);
       const token = req.headers.token.split(' ')[1]
      const userId = req.params.id
@@ -35,8 +37,10 @@ const authUserMiddleWare= (req, res,next) =>{
               status: 'ERROR'
           })
         }
+        console.log('user',user);
+        
         const { payload } = user
-      if(payload?.isAdmin || payload?.id === userId) {
+      if(user?.isAdmin || user?.id === userId) {
          next()
       }else {
           return res.status(404).json({

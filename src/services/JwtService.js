@@ -5,7 +5,7 @@ const generalAccessToken = async(payload) => {
     console.log('payload', payload);
     
 const access_Token = jwt.sign({
-    payload
+    ...payload
 }, process.env.ACCESS_TOKEN, {expiresIn: '30s'})
 return access_Token
 }
@@ -13,7 +13,7 @@ return access_Token
 //refresh token
 const generalRefreshToken = async(payload) => {
 const refresh_token = jwt.sign({
-    payload
+    ...payload
 },  process.env.REFRESH_TOKEN, {expiresIn: '365d'})
 return refresh_token
 }
@@ -25,15 +25,14 @@ const refreshTokenJWTService = async(token) => {
           jwt.verify(token,process.env.REFRESH_TOKEN, async(err, user) => {
             if(err){
                 resolve({
-                    status: 'ERROR',
+                    status: 'ERR',
                     message: 'The authentication'
                 })
             }
-            console.log('user', user);
-            const {payload} = user
+           
           const access_token= await generalRefreshToken({
-            id: payload?.id,
-            isAdmin: payload?.isAdmin
+            id: user?.id,
+            isAdmin:  user?.isAdmin
           })
           console.log('access_token', access_token);  
           resolve({

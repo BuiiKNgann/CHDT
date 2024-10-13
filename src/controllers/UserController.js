@@ -3,11 +3,12 @@ const UserService = require('../services/UserService');
 const JwtService = require('../services/JwtService');
 
 const createUser = async (req, res) => {
-    console.log('Request body:', req.body); // Kiểm tra body nhận được
+      // Kiểm tra body nhận được
     try {
-        console.log('Request body:', req.body); // Kiểm tra body nhận được
+         // Kiểm tra body nhận được
     
         const { email, password, confirmPassword} = req.body
+        
         const reg= /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
       const isCheckEmail = reg.test(email)
 
@@ -44,15 +45,13 @@ const createUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-    console.log('Request body:', req.body); // Kiểm tra body nhận được
+   // console.log('Request body:', req.body); // Kiểm tra body nhận được
     try {
-        console.log('Request body:', req.body); // Kiểm tra body nhận được
-    
         const {email, password} = req.body
+        console.log( req.body); 
         const reg= /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
       const isCheckEmail = reg.test(email)
- 
-
+ console.log(email, password);
       // Trường hợp nào bị thiếu sẽ trả về lỗi
         if(!email || !password){
             return res.status(200).json({
@@ -71,7 +70,14 @@ const loginUser = async (req, res) => {
         }  
        
         const response = await UserService.loginUser(req.body); // Giả định rằng createUser trả về thông tin người dùng
-      return res.status(200).json(response);
+        const {refresh_token, ...newResponse} =response
+       // console.log('response', response);
+       res.cookie('refresh_token', refresh_token,{
+        httpOnly: true,
+        secure: false,
+        samesite: 'strict'
+       })
+        return res.status(200).json(newResponse);
     } catch (e) {
         console.log(e); // Log lỗi nếu có
         return res.status(404).json({
@@ -159,9 +165,9 @@ const getAllUser = async (req, res) => {
  };
 
  const refreshToken = async (req, res) => {
-    //  console.log('Request body:', req.body); // Kiểm tra body nhận được
+    console.log('req.cookies.refresh_token', req.cookies.refresh_token)
      try {
-         const token= req.headers.token.split(' ')[1]
+        const token= req.cookies.refresh_token 
      
          if(!token) {
              return res.status(200).json({
@@ -170,7 +176,9 @@ const getAllUser = async (req, res) => {
              })  
          }
          const response = await JwtService.refreshTokenJWTService(token); // Giả định rằng createUser trả về thông tin người dùng
-       return res.status(200).json(response);
+      
+         return res.status(200).json(response);
+        return 
      } catch (e) {
          console.log(e); // Log lỗi nếu có
          return res.status(404).json({
@@ -179,8 +187,24 @@ const getAllUser = async (req, res) => {
      }
  };
 
+ const logoutUser = async (req, res) => {
+    
+     try {
+        res.clearCookie('refresh_token')
+         return res.status(200).json({
+            status: 'OK',
+            message: 'Logout successfully'
+         });
+        return 
+     } catch (e) {
+         console.log(e); // Log lỗi nếu có
+         return res.status(404).json({
+             message: e.message || 'Có lỗi xảy ra'
+         });
+     }
+ };
 module.exports = {
     createUser, loginUser, updateUser, deleteUser,
-     getAllUser, getDetailsUser, refreshToken
+     getAllUser, getDetailsUser, refreshToken, logoutUser
 };
 

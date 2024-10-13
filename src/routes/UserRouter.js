@@ -6,6 +6,7 @@ const { authMiddleWare, authUserMiddleWare } = require('../middleware/authMiddle
 // Định nghĩa route cho việc tạo người dùng
 router.post('/sign-up', UserController.createUser); // Sử dụng POST cho việc tạo mới
 router.post('/sign-in', UserController.loginUser);
+router.post('/log-out', UserController.logoutUser);
 router.put('/update-user/:id', UserController.updateUser);
 router.delete('/delete-user/:id',authMiddleWare, UserController.deleteUser);
 router.get('/getAll',authMiddleWare, UserController.getAllUser);
