@@ -168,6 +168,8 @@ const getDetailsUser = (id) => {
              const  user = await User.findOne({
                 _id: id
              })  
+             console.log('user',user);
+             
              //check xem user có trong data không
            if( user === null) {
             resolve({
