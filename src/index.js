@@ -11,6 +11,8 @@ const port = process.env.PORT || 3001;
 
 app.use(cors())
 // Sử dụng middleware tích hợp của Express
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb'}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
