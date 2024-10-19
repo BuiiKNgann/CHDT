@@ -50,6 +50,7 @@ const updateProduct = async (req, res) => {
     }
 };
  
+
 const getDetailsProduct = async (req, res) => {
     //  console.log('Request body:', req.body); // Kiểm tra body nhận được
      try {

@@ -37,6 +37,7 @@ const updateProduct = (id, data) => {
             //Tìm id 
              const checkProduct = await Product.findOne({
                 _id: id
+               
              })  
              //check xem user có trong data không
            if(checkProduct === null) {
@@ -57,6 +58,7 @@ const updateProduct = (id, data) => {
         }
     });
 };
+ 
 
 const deleteProduct = (id) => {
     return new Promise(async(resolve, reject) => {
