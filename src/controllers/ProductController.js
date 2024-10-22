@@ -92,6 +92,29 @@ const getDetailsProduct = async (req, res) => {
      }
  };
 
+
+ const deleteMany = async (req, res) => {
+    try {
+        const ids= req.body  // Lấy userId từ tham số URL
+
+        //Kiểm tra productId có tồn tại hay không
+        if(!ids) {
+            return res.status(200).json({
+                status: 'ERROR',
+                message: 'ids id required'
+            })  
+        }
+        const response = await ProductService.deleteMany(ids); // truyền productId đến ProductServices
+      return res.status(200).json(response);
+    } catch (e) {
+        console.log(e); // Log lỗi nếu có
+        return res.status(404).json({
+            message: e.message || 'Có lỗi xảy ra'
+        });
+    }
+};
+
+
  const getAllProduct = async (req, res) => {
    // Kiểm tra body nhận được
      try {
@@ -105,7 +128,19 @@ const getDetailsProduct = async (req, res) => {
          });
      }
  };
+
+ const getAllType = async (req, res) => {
+    try{
+        const response = await ProductService.getAllType()
+        return res.status(200).json(response)
+    }catch(e){
+        return res.status(404).json(response)
+        message: e
+    }
+}
 module.exports = {
-    createProduct,updateProduct, getDetailsProduct, deleteProduct, getAllProduct
-};
+    createProduct,updateProduct, getDetailsProduct, 
+    deleteProduct, getAllProduct, deleteMany, getAllType
+
+}
 
