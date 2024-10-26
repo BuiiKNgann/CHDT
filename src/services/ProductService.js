@@ -131,7 +131,8 @@ const getAllProduct = (limit, page, sort, filter) => {
     return new Promise(async (resolve, reject) => {
         try {
             const totalProduct = await Product.countDocuments();
-
+// mới
+ 
             // Kiểm tra nếu có filter
             if (filter) {
                 const label = filter[0]; // Thuộc tính cần lọc

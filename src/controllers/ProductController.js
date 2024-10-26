@@ -7,7 +7,7 @@ const createProduct = async (req, res) => {
         const {name, image, type, price, countInStock,rating, description, discount } = req.body //Lấy các trường dữ liệu sản phẩm từ request body
 
         // Trường hợp nào bị thiếu sẽ trả về lỗi
-        if(!name || !image || !type || !price || !countInStock || !rating || !description || discount){
+        if(!name || !image || !type || !price || !countInStock || !rating || !description || !discount){
             return res.status(200).json({
                 status: 'ERROR',
                 message: 'The input is required'
@@ -121,7 +121,8 @@ const getDetailsProduct = async (req, res) => {
      try {
          const {limit, page, sort, filter} = req.query 
          const response = await ProductService.getAllProduct(Number(limit) || 8, Number(page)|| 0, sort, filter) ;   
-       return res.status(200).json(response);
+   // const response = await ProductService.getAllProduct(Number(limit) || null, Number(page)|| 0, sort, filter) ;   
+    return res.status(200).json(response);
      } catch (e) {
          console.log(e); // Log lỗi nếu có
          return res.status(404).json({
