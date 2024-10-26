@@ -4,9 +4,10 @@
 const createProduct = async (req, res) => {
    
     try {
-        const {name, image, type, price, countInStock,rating, description } = req.body //Lấy các trường dữ liệu sản phẩm từ request body
-      // Trường hợp nào bị thiếu sẽ trả về lỗi
-        if(!name || !image || !type || !price || !countInStock || !rating || !description){
+        const {name, image, type, price, countInStock,rating, description, discount } = req.body //Lấy các trường dữ liệu sản phẩm từ request body
+
+        // Trường hợp nào bị thiếu sẽ trả về lỗi
+        if(!name || !image || !type || !price || !countInStock || !rating || !description || discount){
             return res.status(200).json({
                 status: 'ERROR',
                 message: 'The input is required'

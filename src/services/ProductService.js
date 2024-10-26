@@ -3,7 +3,7 @@ const Product = require('../models/ProductModel')
 
 const createProduct  = (newProduct) => {
     return new Promise(async(resolve, reject) => {
-        const {name, image, type, price, countInStock,rating, description } = newProduct
+        const {name, image, type, price, countInStock,rating, description, discount} = newProduct
         try {
              //nếu tồn tại email hoặc user in ra lỗi
              const checkProduct = await Product.findOne({
@@ -16,7 +16,7 @@ const createProduct  = (newProduct) => {
             })
            }
             const newProduct = await Product.create({
-                name, image, type, price, countInStock,rating, description 
+                name, image, type, price, countInStock,rating, description, discount
             })
             if(newProduct){
                 resolve({
@@ -156,7 +156,10 @@ const getAllProduct = (limit, page, sort, filter) => {
             // Kiểm tra nếu có sort
             let objectSort = {};
             if (sort) {
-                objectSort[sort[1]] = sort[0] === 'desc' ? -1 : 1; // 'desc' = -1, 'asc' = 1
+          
+              //  objectSort[sort[1]] = sort[0] === 'desc' ? -1 : 1; // 'desc' = -1, 'asc' = 1
+              objectSort[sort[1]] = sort[0] === 'desc' ? -1 : 1; 
+              
             } 
             
             const allProductSort = await Product.find()
